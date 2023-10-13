@@ -1,6 +1,16 @@
 <?php
 require_once 'header.php';
 
+if ($obj->loggedin($obj)) {
+    if (!$obj->acountVerified($obj)) {
+        header("Location: verifyemail.php");
+    } else {
+        header("Location: index.php");
+    }
+}
+
+
+
 $provided_user_name = NULL;
 $provided_email = NULL;
 $provided_password = NULL;
@@ -47,10 +57,24 @@ if (isset($provided_email) && isset($provided_password) && isset($provided_age))
         $hashed_password = password_hash($provided_password, PASSWORD_BCRYPT);
 
         // signup 
-        $query = "INSERT INTO `users` VALUE (null, '$provided_user_name', '$provided_age','$provided_email','$hashed_password', '$provided_bio', 0);";
+        $token = hash('sha256', time() . $provided_email . 'BX');
+
+        $query = "INSERT INTO `users` VALUE (null, '$provided_user_name', '$provided_age','$provided_email','$hashed_password', '$provided_bio', 0, 0, '$token', null, null);";
         $result = $obj->executeQuery($query);
 
-        $message = 'user created successfully';
+
+        $body = '
+            <p>click on this link to verify your account</p>
+            <p><b><a href="localhost/verifyAcount.php?token=' . $token . '&email=' . $provided_email . '">confirm your account</a></b></p>
+        ';
+
+        $sended = $obj->sendMail($provided_email, 'confirm your account', $body);
+
+        if ($sended) {
+            $message = 'user created successfully';
+        }
+
+
 
     }
 }
@@ -61,62 +85,64 @@ if (isset($provided_email) && isset($provided_password) && isset($provided_age))
 
 ?>
 
+<div class="container m-3 d-flex justify-content-start flex-wrap">
 
-<div class="content">
-    <div class="signup">
-        <h2 class='text-center'>Register</h2>
+    <div class="content">
+        <div class="signup">
+            <h2 class='text-center'>Register</h2>
 
-        <text class='text-danger text-center'>
-            <?php
-            if ($errors != null) {
-                echo $errors;
-            }
-            ?>
-        </text>
+            <text class='text-danger text-center'>
+                <?php
+                if ($errors != null) {
+                    echo $errors;
+                }
+                ?>
+            </text>
 
-        <text class='text-success text-center'>
-            <?php
-            if ($message != null) {
-                echo $message;
-            }
-            ?>
-        </text>
-
-
-        <form action="" method="POST">
-            <div class="mb-3">
-                <label for="user_name" class="form-label">user name</label>
-                <input type="text" name="user_name" class="form-control" id="user_name" aria-describedby="user_name">
-            </div>
-
-            <div class="mb-3">
-                <label for="age" class="form-label">Age</label>
-                <input type="number" name="age" class="form-control" id="age" aria-describedby="ageHelp">
-            </div>
-
-            <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp">
-            </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" id="password">
-            </div>
-
-            <div class="mb-3">
-                <label for="bio" class="form-label">Bio</label>
-                <input type="text" name="bio" class="form-control" id="bio" aria-describedby="bioHelp">
-            </div>
+            <text class='text-success text-center'>
+                <?php
+                if ($message != null) {
+                    echo $message;
+                }
+                ?>
+            </text>
 
 
+            <form action="" method="POST">
+                <div class="mb-3">
+                    <label for="user_name" class="form-label">user name</label>
+                    <input type="text" name="user_name" class="form-control" id="user_name"
+                        aria-describedby="user_name">
+                </div>
 
-            <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary">Signup</button>
-            </div>
-        </form>
+                <div class="mb-3">
+                    <label for="age" class="form-label">Age</label>
+                    <input type="number" name="age" class="form-control" id="age" aria-describedby="ageHelp">
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp">
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="password">
+                </div>
+
+                <div class="mb-3">
+                    <label for="bio" class="form-label">Bio</label>
+                    <input type="text" name="bio" class="form-control" id="bio" aria-describedby="bioHelp">
+                </div>
+
+
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Signup</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
 </div>
 <?php

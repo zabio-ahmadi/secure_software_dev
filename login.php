@@ -5,6 +5,9 @@ $provided_email = NULL;
 $provided_password = NULL;
 $errors = null;
 
+if ($obj->loggedin($obj)) {
+    header("Location: index.php");
+}
 
 if (isset($_POST['email'])) {
     $provided_email = $_POST['email'];
@@ -31,11 +34,10 @@ if (isset($provided_email) && isset($provided_password)) {
 
     if (password_verify($provided_password, $password)) {
         // Password is correct
-
         $_SESSION['logged_user'] = $email;
-        $_SESSION['valid_until'] = time() + (20);
+        $_SESSION['valid_until'] = $obj->USER_SESSION_DURATION;
 
-        header("Location: posts.php");
+        header("Location: index.php");
 
     } else {
         // Password is incorrect
@@ -48,35 +50,40 @@ if (isset($provided_email) && isset($provided_password)) {
 
 ?>
 
-<div class="content">
-    <div class="login">
-        <h2 class='text-center'>login</h2>
-        <text class='text-danger text-center'>
-            <?php
-            if ($errors != null) {
-                echo $errors;
-            }
-            ?>
-        </text>
-        <form action='' method='POST'>
-            <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email address</label>
-                <input type="text" name="email" value="<?php echo $provided_email ?>" class="form-control"
-                    id="exampleInputEmail1" aria-describedby="emailHelp">
+<div class="container m-3 d-flex justify-content-start flex-wrap">
 
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
-            </div>
+    <div class="content">
+        <div class="login">
+            <h2 class='text-center'>login</h2>
+            <text class='text-danger text-center'>
+                <?php
+                if ($errors != null) {
+                    echo $errors;
+                }
+                ?>
+            </text>
+            <form action='' method='POST'>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="text" name="email" value="<?php echo $provided_email ?>" class="form-control"
+                        id="exampleInputEmail1" aria-describedby="emailHelp">
 
-            <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary">Login</button>
-                <a href="signup.php">Sign up</a>
-            </div>
-        </form>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <a class="btn btn-outline-info" href="register.php">Sign up</a>
+                </div>
+                <div class="mt-3">
+                    <a class="btn btn-outline-danger" href="forgotpassword.php">forgot password</a>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
 </div>
 <?php

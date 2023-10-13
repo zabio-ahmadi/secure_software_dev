@@ -1,6 +1,16 @@
 <?php
 include_once 'header.php';
 
+if (!$obj->loggedin($obj)) {
+  header("Location: login.php");
+}
+
+if (!$obj->acountVerified($obj)) {
+
+  header("Location: verifyemail.php");
+}
+
+
 $query = "SELECT * FROM posts
           LEFT JOIN users on users.id = posts.user_id;
 ";
@@ -10,43 +20,91 @@ $result = $obj->executeQuery($query);
 
 ?>
 
-<div class="container m-3 d-flex justify-content-start flex-wrap">
+<div class="d-flex justify-content-start flex-wrap">
 
-  <?php
-
-
-  $_SESSION['valid_until'] = time() + (20);
-
-  while ($query_row = mysqli_fetch_assoc($result)) {
-
-    echo '
-      <div class="article m-3 content">
-      <div class="row-8">
-        <div class="card ml-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="' . $query_row['image_url'] . '" class="img-scal img-fluid rounded-start" alt="..." />
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">' . $query_row['title'] . '</h5>
-                <p class="card-text">
-                ' . $query_row['body'] . '
-                </p>
-                <p class="card-text">
-                 posted by @<span class="author">' . $query_row['user_name'] . '</span> 3 mins ago
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="twit">
+    <div class="twit-owner">
+      <div class="owner-image">
+        <img src="uploads/profile.jpg" alt="">
       </div>
-    </div>
-      
-      ';
-  }
+      <div class="owner-username">
+        <p>
+          <a href=""><span>zabiullah ahmadi</span></a>
+          <span class="material-icons post__badge"> verified
+          </span>
+        </p>
+        <p>@USER</p>
+      </div>
 
-  ?>
+    </div>
+    <div class="twit-header">
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam deserunt impedit possimus quis! Omnis fugiat
+      sequi nostrum beatae optio sint, dolor mollitia delectus recusandae distinctio. Id ex doloribus voluptas
+      veritatis.
+    </div>
+    <div class="twit-body">
+      <img src="uploads/tesla.jpeg" alt="">
+    </div>
+    <div class="twit-footer">
+      <div class="twit-date">
+        <p>12:09 PM 10 Nov 2023</p>
+      </div>
+
+      <div class="share_like">
+        <i class="fa-regular fa-comment"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <i class="fa-regular fa-heart"></i>
+        <i class="fa-regular fa-bookmark"></i>
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+  <div class="twit">
+    <div class="twit-owner">
+      <div class="owner-image">
+        <img src="uploads/profile.jpg" alt="">
+      </div>
+      <div class="owner-username">
+        <p>
+          <a href=""><span>zabiullah ahmadi</span></a>
+          <span class="material-icons post__badge"> verified
+          </span>
+        </p>
+        <p>@USER</p>
+      </div>
+
+    </div>
+    <div class="twit-header">
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam deserunt impedit possimus quis! Omnis fugiat
+      sequi nostrum beatae optio sint, dolor mollitia delectus recusandae distinctio. Id ex doloribus voluptas
+      veritatis.
+    </div>
+    <div class="twit-body">
+      <img src="uploads/nature.jpeg" alt="">
+    </div>
+    <div class="twit-footer">
+      <div class="twit-date">
+        <p>12:09 PM 10 Nov 2023</p>
+      </div>
+
+      <div class="share_like">
+        <i class="fa-regular fa-comment"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <i class="fa-regular fa-heart"></i>
+        <i class="fa-regular fa-bookmark"></i>
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+
 </div>
 <?php
 include_once 'footer.php';

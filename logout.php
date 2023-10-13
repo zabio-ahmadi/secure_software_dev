@@ -1,8 +1,8 @@
 <?php
-session_start();
+require_once 'header.php';
 
 // Check if the user is logged in
-if (isset($_SESSION['logged_user'])) {
+if ($obj->loggedin($obj)) {
     // destroy the session data
     unset($_SESSION['logged_user']);
 }
