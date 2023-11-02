@@ -51,5 +51,4 @@ $users = $obj->executeQuery($query);
             ?>
         </tbody>
     </table>
-
 </div>

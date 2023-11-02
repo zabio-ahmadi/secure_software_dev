@@ -23,7 +23,6 @@ if (isset($provided_email) && isset($provided_password)) {
     // check if user exists with provided email 
     $query = "SELECT * FROM users where email = '$provided_email';";
 
-
     $result = $obj->executeQuery($query);
     $email = '';
     $password = '';
@@ -75,11 +74,11 @@ if (isset($provided_email) && isset($provided_password)) {
                 </div>
 
                 <div class="d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <a class="btn btn-outline-info" href="register.php">Sign up</a>
+                    <button type="submit" class="btn btn-primary btn-sm">Login</button>
+                    <a class="btn btn-outline-info btn-sm" href="register.php">Sign up</a>
                 </div>
                 <div class="mt-3">
-                    <a class="btn btn-outline-danger" href="forgotpassword.php">forgot password</a>
+                    <a class="btn btn-outline-danger btn-sm" href="forgotpassword.php">forgot password</a>
                 </div>
             </form>
         </div>

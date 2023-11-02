@@ -105,7 +105,7 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
         </div>
 
         <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-primary">Reset</button>
+            <button type="submit" class="btn btn-primary btn-sm">Reset</button>
         </div>
     </form>
 </div>

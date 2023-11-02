@@ -145,7 +145,7 @@ if (isset($provided_email) && isset($provided_password) && isset($provided_age))
 
 
                 <div class="d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary">Signup</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Signup</button>
                 </div>
             </form>
         </div>
