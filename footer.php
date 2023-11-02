@@ -12,11 +12,15 @@
                 <div class="input_search">
                     <input type="text">
                 </div>
-            </div>
-    
-            <div class="feeds">
-                What\'s happening?
-            </div>
+            </div>';
+
+        ?>
+
+
+        <div class="topics">
+            <b>Todays Hot topic</b>
+        </div>
+        <?php echo '
             <div>
                 <blockquote class="twitter-tweet">
                     <p lang="fr" dir="ltr">La classe à la française. <a
@@ -43,5 +47,7 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 </body>
+
+<script src="js/main.js"></script>
 
 </html>

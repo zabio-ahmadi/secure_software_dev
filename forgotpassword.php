@@ -38,12 +38,24 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
 
         $token = hash('sha256', time() . $provided_email . 'BX');
 
+        // signup token 
+        $token = hash('sha256', time() . $provided_email . 'BX');
+
+
+        $message = ['email' => $provided_email, 'token' => $token];
+
+        $verification_token = ['message' => $message, 'reset' => 1, 'hash_of_message' => $obj->encrypt(json_encode($message))];
+
+
+        $encrypted_token = $obj->encrypt(json_encode($verification_token));
+
+
         $query = "update users set email_verified= 0 , password='$hashed_password', password_reset_token = '$token', verified_at = current_timestamp where email='$provided_email';";
         $result = $obj->executeQuery($query);
         if ($result) {
             $body = '
             <p>click on this link below to reset password</p>
-            <p><b><a href="localhost/verifyAcount.php?token=' . $token . '&email=' . $provided_email . '&reset=1">confirm reset password</a></b></p>
+            <p><b><a href="localhost/verifyAcount.php?token=' . $encrypted_token . '">confirm reset password</a></b></p>
         ';
 
             $sended = $obj->sendMail($provided_email, 'confirm reset password', $body);

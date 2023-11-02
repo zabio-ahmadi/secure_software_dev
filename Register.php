@@ -52,20 +52,27 @@ if (isset($provided_email) && isset($provided_password) && isset($provided_age))
     if ($num_rows == 1) {
         $errors = "user with email $provided_email already exists";
     } else {
-
         // hashed password 
         $hashed_password = password_hash($provided_password, PASSWORD_BCRYPT);
 
-        // signup 
+        // signup token 
         $token = hash('sha256', time() . $provided_email . 'BX');
 
-        $query = "INSERT INTO `users` VALUE (null, '$provided_user_name', '$provided_age','$provided_email','$hashed_password', '$provided_bio', 0, 0, '$token', null, null);";
+
+        $message = ['email' => $provided_email, 'token' => $token]; // we can add the valid_until time also 
+
+        $verification_token = ['message' => $message, 'reset' => 0, 'hash_of_message' => $obj->encrypt(json_encode($message))];
+
+        $encrypted_token = $obj->encrypt(json_encode($verification_token));
+
+
+        $query = "INSERT INTO `users` VALUE (null, '$provided_user_name', '$provided_age','$provided_email',null,'$hashed_password', '$provided_bio', 0, 0, '$token', null, null);";
         $result = $obj->executeQuery($query);
 
 
         $body = '
             <p>click on this link to verify your account</p>
-            <p><b><a href="localhost/verifyAcount.php?token=' . $token . '&email=' . $provided_email . '">confirm your account</a></b></p>
+            <p><b><a href="localhost/verifyAcount.php?token=' . $encrypted_token . '">confirm your account</a></b></p>
         ';
 
         $sended = $obj->sendMail($provided_email, 'confirm your account', $body);

@@ -73,18 +73,13 @@ if ((isset($post_title) && $post_title != null) && (isset($post_body) && $post_b
         }
     }
 }
-
-
 ?>
-
-
-
 
 <div class="content">
     <div class="register_post">
-        <form action="posts.php" method="POST" enctype="multipart/form-data">
+        <form action="twits.php" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
-                <h5 class="text-primary"> create a new twit </h5>
+                <h6> create a new twit </h6>
 
                 <text class='text-danger text-center'>
                     <?php

@@ -15,15 +15,17 @@ class Connection
     public $connection = NULL;
 
     public $USER_SESSION_DURATION = NULL;
+    public $key = NULL;
 
     public function __construct()
     {
-        $this->env = parse_ini_file('.env');
+        $this->env = parse_ini_file('dev.env');
 
         $this->servername = $this->env["DB_HOST"]; // cause we are on the docker network 
         $this->username = $this->env['DB_USER'];
         $this->password = $this->env['DB_PASSWORD'];
         $this->DB_name = $this->env['DB_NAME'];
+        $this->key = $this->env['ecryption_key'];
 
         // Create connection
         $this->connection = mysqli_connect($this->servername, $this->username, $this->password, $this->DB_name);
@@ -38,6 +40,7 @@ class Connection
             user_name VARCHAR(64),
             age INT,
             email VARCHAR(255),
+            profile_image VARCHAR(1024),
             password VARCHAR(255),
             bio VARCHAR(512),
             isAdmin Boolean default 0,
@@ -54,6 +57,24 @@ class Connection
             die("Query failed: " . mysqli_error($this->connection));
         }
 
+
+        // user has friends tables
+        $query = 'CREATE TABLE IF NOT EXISTS `user_has_friend` (
+                `user_id1` INTEGER NOT NULL,
+                `user_id2` INTEGER NOT NULL,
+                accepted BOOLEAN DEFAULT 0, 
+                FOREIGN KEY (`user_id1`) REFERENCES `users` (`id`),
+                FOREIGN KEY (`user_id2`) REFERENCES `users` (`id`))';
+
+        // Execute the query
+        $result = mysqli_query($this->connection, $query);
+        // Check if the query was successful
+        if (!$result) {
+            die("Query failed: " . mysqli_error($this->connection));
+        }
+
+
+        // create posts table 
         $query = 'CREATE TABLE IF NOT EXISTS posts (
             id INT PRIMARY KEY AUTO_INCREMENT,
             title VARCHAR(255),
@@ -69,6 +90,27 @@ class Connection
         if (!$result) {
             die("Query failed: " . mysqli_error($this->connection));
         }
+
+
+
+        // create messages table 
+        // user has friends tables
+        $query = 'CREATE TABLE IF NOT EXISTS user_has_messages (
+        user_id1 INTEGER NOT NULL,
+        user_id2 INTEGER NOT NULL,
+        message varchar(512),
+        sended_at DATETIME DEFAULT CURRENT_TIMESTAMP, 
+        FOREIGN KEY (user_id1) REFERENCES users (id),
+        FOREIGN KEY (user_id2) REFERENCES users (id))';
+        // Execute the query
+        $result = mysqli_query($this->connection, $query);
+        // Check if the query was successful
+        if (!$result) {
+            die("Query failed: " . mysqli_error($this->connection));
+        }
+
+
+
 
 
     }
@@ -130,6 +172,17 @@ class Connection
 
     }
 
+    public function isAdmin($obj)
+    {
+        $loged_user_email = $_SESSION['logged_user'];
+        $query = "SELECT * FROM users where email='$loged_user_email'";
+        $result = $obj->executeQuery($query);
+        $result = mysqli_fetch_assoc($result)['isAdmin'];
+        return ($result == 1);
+
+    }
+
+
     public function getUserIdByEmail($obj, $email)
     {
         // echo $_SESSION['logged_user'];
@@ -152,7 +205,7 @@ class Connection
         $mail->isSMTP();
         $mail->Host = $this->env['SMTP_HOST']; //gmail SMTP server
         $mail->SMTPAuth = true;
-        
+
         $mail->Username = $this->env['SMTP_USER_MAIL']; //email
         $mail->Password = $this->env['SMTP_USER_PASSWORD']; //16 character obtained from app password created
         $mail->Port = $this->env['SMTP_PORT']; //SMTP port
@@ -179,6 +232,22 @@ class Connection
 
         return ($sended == true);
     }
+
+    function encrypt($message)
+    {
+        $iv = substr($message, 0, 16);
+        $cipherMessage = openssl_encrypt($message, 'aes-256-cbc', $this->key, 0, $iv);
+        return base64_encode($iv . $cipherMessage);
+    }
+
+    function decrypt($message)
+    {
+        $data = base64_decode($message);
+        $iv = substr($data, 0, 16);
+        $message = substr($data, 16);
+        return openssl_decrypt($message, 'aes-256-cbc', $this->key, 0, $iv);
+    }
+
 
     public function __destruct()
     {

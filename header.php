@@ -22,7 +22,8 @@ $obj = new Connection();
 <body>
     <nav class="navbar bg-ligth navbar-expand-lg border-bottom border-body bg-body-tertiary" data-bs-theme="ligth">
         <div class="container">
-            <a class="navbar-brand" href="index.php"><i class="fa-brands fa-twitter" style="color: #146ebe;"></i></a>
+            <a class="navbar-brand" href="index.php">secure app <i class="fa-brands fa-twitter"
+                    style="color: #146ebe;"></i></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -30,11 +31,6 @@ $obj = new Connection();
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.php">Acueil</a>
-                    </li>
-
-
                 </ul>
                 <div class="d-flex">
                     <form class="d-flex" role="search">
@@ -53,8 +49,6 @@ $obj = new Connection();
                         ?>
                         </button>
                     </form>
-
-
                 </div>
 
             </div>
@@ -67,13 +61,17 @@ $obj = new Connection();
             <div class="col-3">
 
                 <?php
+
                 if ($obj->loggedin($obj) && $obj->acountVerified($obj)) {
+                    $logged_user = $_SESSION['logged_user'];
+                    $user = $obj->getUserByEmail($obj, $logged_user);
+
                     echo '<div class="sidebar">
                     <div class="profile_image">
-                        <img src="uploads/profile.jpg" alt="">
+                        <img src="' . $user['profile_image'] . '" alt="">
                     </div>
                     <div class="profile_info">
-                        ahmadi zabiullah
+                        ' . $user['user_name'] . '
                         <span class="post__headerSpecial">
                             <span class="material-icons post__badge"> verified
                             </span>
@@ -82,11 +80,15 @@ $obj = new Connection();
     
                     <div class="profile_menu">
                         <ul>
-                            <li><a href="profile.php"><i class="fa-solid fa-address-card"></i> <i>Profile</i></a></li>
+                            <li>
+                            <a class="nav-link active" aria-current="page" href="index.php"><i class="fa-solid fa-house"></i> <i>Home</i></a>
+                            
+                            </li>
                             <li><a href="twits.php"><i class="fa-brands fa-twitter"></i> <i>twits</i></a></li>
                             <li><a href="friends.php"><i class="fa-solid fa-user-group"></i> <i>friends</i></a></li>
-                            <li><a href=""><i class="fa-regular fa-message"></i> <i>messages</i></a></li>
-                            <li><a href="setting.php"><i class="fa-solid fa-gear"></i> <i>settings</i></a></li>
+                            <li><a href="settings.php"><i class="fa-solid fa-gear"></i> <i>settings</i></a></li>
+                            <li class="is-admin"><a href="Admin.php"><i class="fa-solid fa-crown"></i> <i>Admin</i></a></li>
+                            
     
                         </ul>
                     </div>
@@ -97,4 +99,4 @@ $obj = new Connection();
                 ?>
 
             </div> <!--end of col-3 -->
-            <div class="col-6">
+            <div class="col-6" style="margin-left: -10px;padding-left: 0;">

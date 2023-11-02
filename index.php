@@ -9,103 +9,119 @@ if (!$obj->acountVerified($obj)) {
 
   header("Location: verifyemail.php");
 }
+$loged_user_email = $_SESSION['logged_user'];
+$loged_user_id = $obj->getUserIdByEmail($obj, $loged_user_email);
 
 
-$query = "SELECT * FROM posts
-          LEFT JOIN users on users.id = posts.user_id;
+$query = "SELECT u.id, u.user_name,u.profile_image, f1.*, f2.*
+FROM users u
+LEFT JOIN user_has_friend f1 ON u.id = f1.user_id1 AND f1.user_id2 = $loged_user_id
+LEFT JOIN user_has_friend f2 ON u.id = f2.user_id2 AND f2.user_id1 = $loged_user_id
+WHERE u.email != '$loged_user_email' AND u.id != $loged_user_id
+AND (f1.user_id2 IS NULL AND f2.user_id1 IS NULL);
 ";
-$result = $obj->executeQuery($query);
+
+$users = $obj->executeQuery($query);
 
 
 
 ?>
 
-<div class="d-flex justify-content-start flex-wrap">
-
-  <div class="twit">
-    <div class="twit-owner">
-      <div class="owner-image">
-        <img src="uploads/profile.jpg" alt="">
-      </div>
-      <div class="owner-username">
-        <p>
-          <a href=""><span>zabiullah ahmadi</span></a>
-          <span class="material-icons post__badge"> verified
-          </span>
-        </p>
-        <p>@USER</p>
-      </div>
-
-    </div>
-    <div class="twit-header">
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam deserunt impedit possimus quis! Omnis fugiat
-      sequi nostrum beatae optio sint, dolor mollitia delectus recusandae distinctio. Id ex doloribus voluptas
-      veritatis.
-    </div>
-    <div class="twit-body">
-      <img src="uploads/tesla.jpeg" alt="">
-    </div>
-    <div class="twit-footer">
-      <div class="twit-date">
-        <p>12:09 PM 10 Nov 2023</p>
-      </div>
-
-      <div class="share_like">
-        <i class="fa-regular fa-comment"></i>
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        <i class="fa-regular fa-heart"></i>
-        <i class="fa-regular fa-bookmark"></i>
-      </div>
-
-    </div>
-
-
+<div class="friend_proposal">
+  <div class="header">
+    Peoples you may know
   </div>
-
-
-  <div class="twit">
-    <div class="twit-owner">
-      <div class="owner-image">
-        <img src="uploads/profile.jpg" alt="">
+  <div class="proposal">
+    <?php
+    while ($row = mysqli_fetch_array($users)) {
+      echo '<div class="person">
+      <div class="person_image">
+        <img src="' . $row['profile_image'] . '" alt="">
       </div>
-      <div class="owner-username">
-        <p>
-          <a href=""><span>zabiullah ahmadi</span></a>
-          <span class="material-icons post__badge"> verified
-          </span>
-        </p>
-        <p>@USER</p>
+      <div class="person_content">
+        <div class="person_details">
+          <b>' . $row['user_name'] . '</b>
+        </div>
+        <div class="connect">
+          <form action="add_friend.php" method="post">
+          <input type="hidden" name="friend" value="' . $row['id'] . '">
+            <button type="submit">Follow</button>
+          </form>
+            
+        </div>
       </div>
-
-    </div>
-    <div class="twit-header">
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam deserunt impedit possimus quis! Omnis fugiat
-      sequi nostrum beatae optio sint, dolor mollitia delectus recusandae distinctio. Id ex doloribus voluptas
-      veritatis.
-    </div>
-    <div class="twit-body">
-      <img src="uploads/nature.jpeg" alt="">
-    </div>
-    <div class="twit-footer">
-      <div class="twit-date">
-        <p>12:09 PM 10 Nov 2023</p>
-      </div>
-
-      <div class="share_like">
-        <i class="fa-regular fa-comment"></i>
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        <i class="fa-regular fa-heart"></i>
-        <i class="fa-regular fa-bookmark"></i>
-      </div>
-
-    </div>
-
-
+    </div>';
+    }
+    ?>
   </div>
-
 
 
 </div>
+
+
+
+<?php
+$query = "SELECT * FROM posts
+LEFT JOIN users on users.id = posts.user_id;
+";
+$posts = $obj->executeQuery($query);
+
+while ($row = mysqli_fetch_array($posts)) {
+  $isAdmin = '';
+  if ($row['isAdmin'] == false) {
+    $isAdmin = '@USER';
+  } else {
+    $isAdmin = '@ADMIN';
+  }
+
+  echo '
+      <div class="d-flex justify-content-start flex-wrap">
+      <div class="twit">
+        <div class="twit-owner">
+          <div class="owner-image">
+            <img src="' . $row['profile_image'] . '" alt="">
+          </div>
+          <div class="owner-username">
+            <p>
+              <a href=""><span>' . $row['user_name'] . '</span></a>
+              <span class="material-icons post__badge"> verified
+              </span>
+            </p>
+            <p>' . $isAdmin . '</p>
+          </div>
+
+        </div>
+        <div class="twit-header">
+          <h4>' . $row['title'] . '</h4>
+          ' . $row['body'] . '
+        </div>
+        <div class="twit-body">
+          <img src="' . $row['image_url'] . '" alt="">
+        </div>
+        <div class="twit-footer">
+          <div class="twit-date">
+            <p>12:09 PM 10 Nov 2023</p>
+          </div>
+
+          <div class="share_like">
+            <i class="fa-regular fa-comment"></i>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            <i class="fa-regular fa-heart"></i>
+            <i class="fa-regular fa-bookmark"></i>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  
+  ';
+}
+
+
+?>
+
 <?php
 include_once 'footer.php';
 ?>
+
+
