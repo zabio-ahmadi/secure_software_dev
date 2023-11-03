@@ -3,18 +3,18 @@
     <?php
     if ($obj->loggedin($obj)) {
 
-        echo '<div class="rsidebar">
+        echo '<div class="rsidebar">'
 
-            <div class="search">
-                <div class="icon">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </div>
-                <div class="input_search">
-                    <input type="text">
-                </div>
-            </div>';
-
-        ?>
+            // <div class="search">
+            //     <div class="icon">
+            //         <i class="fa-solid fa-magnifying-glass"></i>
+            //     </div>
+            //     <div class="input_search">
+            //         <input type="text">
+            //     </div>
+            // </div>';
+    
+            ?>
 
 
         <div class="topics">

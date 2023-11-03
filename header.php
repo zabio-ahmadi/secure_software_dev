@@ -22,7 +22,7 @@ $obj = new Connection();
 <body>
     <nav class="navbar bg-ligth navbar-expand-lg border-bottom border-body bg-body-tertiary" data-bs-theme="ligth">
         <div class="container">
-            <a class="navbar-brand" href="index.php">secure app <i class="fa-brands fa-twitter"
+            <a class="navbar-brand" href="index.php">The X2 Project<i class="fa-brands fa-twitter"
                     style="color: #146ebe;"></i></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -87,7 +87,7 @@ $obj = new Connection();
                             <li><a href="twits.php"><i class="fa-brands fa-twitter"></i> <i>twits</i></a></li>
                             <li><a href="friends.php"><i class="fa-solid fa-user-group"></i> <i>friends</i></a></li>
                             <li><a href="settings.php"><i class="fa-solid fa-gear"></i> <i>settings</i></a></li>
-                            <li class="is-admin"><a href="Admin.php"><i class="fa-solid fa-crown"></i> <i>Admin</i></a></li>
+                            <li class="is-admin"><a href="admin.php"><i class="fa-solid fa-crown"></i> <i>Admin</i></a></li>
                             
     
                         </ul>

@@ -33,10 +33,23 @@ if (isset($provided_email) && isset($provided_password)) {
 
     if (password_verify($provided_password, $password)) {
         // Password is correct
-        $_SESSION['logged_user'] = $email;
-        $_SESSION['valid_until'] = $obj->USER_SESSION_DURATION;
 
-        header("Location: index.php");
+        $target_user = $obj->getUserByEmail($obj, $email);
+
+        if ($target_user['active'] == 0) {
+            header("Location: account_disabled.php");
+        } else if ($target_user['email_verified'] == 0) {
+            header("Location: verifyemail.php");
+        } else {
+
+            $_SESSION['logged_user'] = $email;
+            $_SESSION['valid_until'] = $obj->USER_SESSION_DURATION;
+            header("Location: index.php");
+        }
+
+
+
+
 
     } else {
         // Password is incorrect

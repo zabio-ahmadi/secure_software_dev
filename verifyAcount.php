@@ -34,7 +34,7 @@ if ((isset($_GET['token']) && !empty($token))) {
             // message is not altered and 
             $email = $target_user['email'];
 
-            $query = "UPDATE users SET email_verified =1,password_reset_token=null,verify_token=null, verified_at = CURRENT_TIMESTAMP where email = '$email'";
+            $query = "UPDATE users SET active=1, email_verified =1,password_reset_token=null,verify_token=null, verified_at = CURRENT_TIMESTAMP where email = '$email'";
 
             $result = $obj->executeQuery($query);
 

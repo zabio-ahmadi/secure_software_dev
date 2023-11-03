@@ -66,7 +66,7 @@ if (isset($provided_email) && isset($provided_password) && isset($provided_age))
         $encrypted_token = $obj->encrypt(json_encode($verification_token));
 
 
-        $query = "INSERT INTO `users` VALUE (null, '$provided_user_name', '$provided_age','$provided_email',null,'$hashed_password', '$provided_bio', 0, 0, '$token', null, null);";
+        $query = "INSERT INTO `users` VALUE (null, '$provided_user_name', '$provided_age','$provided_email',1,'$token',null,'$hashed_password', '$provided_bio', 0, 0, '$token', null, null);";
         $result = $obj->executeQuery($query);
 
 
@@ -78,7 +78,8 @@ if (isset($provided_email) && isset($provided_password) && isset($provided_age))
         $sended = $obj->sendMail($provided_email, 'confirm your account', $body);
 
         if ($sended) {
-            $message = 'user created successfully';
+            $message = '<p>user created successfully</p>
+                        <p>an email has been send to ' . $provided_email . ' please confirm your email</p>';
         }
 
 
@@ -142,8 +143,6 @@ if (isset($provided_email) && isset($provided_password) && isset($provided_age))
                     <input type="text" name="bio" class="form-control" id="bio" aria-describedby="bioHelp">
                 </div>
 
-
-
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary btn-sm">Signup</button>
                 </div>
@@ -155,3 +154,4 @@ if (isset($provided_email) && isset($provided_password) && isset($provided_age))
 <?php
 include_once 'footer.php';
 ?>
+

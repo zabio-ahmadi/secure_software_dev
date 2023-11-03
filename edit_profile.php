@@ -8,8 +8,21 @@ if (!$obj->acountVerified($obj)) {
     header("Location: verifyemail.php");
 }
 
-$logged_user = $_SESSION['logged_user'];
-$user = $obj->getUserByEmail($obj, $logged_user);
+$logged_user = NULL;
+$user = NULL;
+
+// if logged user is admin 
+if (isset($_POST["profile_email"])) {
+
+    $logged_user = $_POST["profile_email"];
+    $user = $obj->getUserByEmail($obj, $logged_user);
+
+} else {
+    $logged_user = $_SESSION['logged_user'];
+    $user = $obj->getUserByEmail($obj, $logged_user);
+}
+
+
 
 
 
@@ -165,11 +178,11 @@ if (
                 }
                 ?>
             </text>
-
-
             <form action="" method="POST" enctype="multipart/form-data">
+
                 <div class="mb-3">
                     <label for="user_name" class="form-label">User Name</label>
+                    <input type="text" name="profile_email" value="<?php echo $user['email'] ?>" style="display:none">
                     <input value="<?php echo $user['user_name'] ?>" type="text" name="user_name" class="form-control"
                         id="user_name" aria-describedby="user_name">
                 </div>

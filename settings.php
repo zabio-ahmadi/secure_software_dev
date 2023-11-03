@@ -34,6 +34,11 @@ if (isset($_POST['delete'])) {
     if (!unlink($user['profile_image'])) {
         $errors = "can't delete user profile_image";
     }
+
+    // delete user connections 
+    $query = "DELETE FROM user_has_friend where user_id1='$user_id' or user_id2='$user_id'";
+    $result = $obj->executeQuery($query);
+
     // delete user 
     $query = "DELETE FROM users where email='$logged_user'";
     $result = $obj->executeQuery($query);
@@ -135,6 +140,14 @@ if (isset($_POST['delete'])) {
             </div>
 
             <div class="line">
+                <div>
+                    <label>TOKEN</label>
+                    <p style="font-size: 10pt;margin: 0;color: black;font-weight: 600;">
+                        <?php echo $user['user_token'] ?>
+                    </p>
+                </div>
+            </div>
+            <div class="line">
                 <div class="profile_bio">
                     <label>Bio</label>
                     <p>
@@ -142,6 +155,7 @@ if (isset($_POST['delete'])) {
                     </p>
                 </div>
             </div>
+
 
             <div class="line">
                 <form action="" method="POST">

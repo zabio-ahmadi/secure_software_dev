@@ -40,6 +40,8 @@ class Connection
             user_name VARCHAR(64),
             age INT,
             email VARCHAR(255),
+            active TINYINT DEFAULT 1,
+            user_token VARCHAR(255) default null,
             profile_image VARCHAR(1024),
             password VARCHAR(255),
             bio VARCHAR(512),
@@ -80,9 +82,24 @@ class Connection
             title VARCHAR(255),
             body VARCHAR(1024),
             image_url varchar(255),
+            posted_at DATETIME default CURRENT_TIMESTAMP,
             user_id INT, 
             foreign key (user_id) references users (id)
         )';
+
+        // Execute the query
+        $result = mysqli_query($this->connection, $query);
+        // Check if the query was successful
+        if (!$result) {
+            die("Query failed: " . mysqli_error($this->connection));
+        }
+
+        // create report table 
+        $query = 'CREATE TABLE IF NOT EXISTS reports (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    report_body VARCHAR(1024),
+                    post_id  INT
+                )';
 
         // Execute the query
         $result = mysqli_query($this->connection, $query);
@@ -108,11 +125,6 @@ class Connection
         if (!$result) {
             die("Query failed: " . mysqli_error($this->connection));
         }
-
-
-
-
-
     }
 
     public function executeQuery($query)
@@ -152,7 +164,6 @@ class Connection
         // Format the timestamp as desired
         $formattedTime = date("Y-m-d H:i:s", $timestamp);
 
-
         $valid = isset($_SESSION['valid_until']) && $_SESSION['valid_until'] > time();
 
         if (isset($_SESSION['logged_user']) && !empty($_SESSION['logged_user']) && $valid) {
@@ -168,6 +179,16 @@ class Connection
         $query = "SELECT * FROM users where email='$loged_user_email'";
         $result = $obj->executeQuery($query);
         $result = mysqli_fetch_assoc($result)['email_verified'];
+        return ($result == 1);
+
+    }
+
+    public function acountActive($obj)
+    {
+        $loged_user_email = $_SESSION['logged_user'];
+        $query = "SELECT * FROM users where email='$loged_user_email'";
+        $result = $obj->executeQuery($query);
+        $result = mysqli_fetch_assoc($result)['active'];
         return ($result == 1);
 
     }
@@ -191,6 +212,8 @@ class Connection
         return mysqli_fetch_assoc($result)['id'];
     }
 
+
+
     public function getUserByEmail($obj, $email)
     {
         // echo $_SESSION['logged_user'];
@@ -199,6 +222,13 @@ class Connection
         return mysqli_fetch_assoc($result);
     }
 
+    public function getUserById($obj, $id)
+    {
+        // echo $_SESSION['logged_user'];
+        $query = "SELECT * FROM users where id='$id'";
+        $result = $obj->executeQuery($query);
+        return mysqli_fetch_assoc($result);
+    }
     public function sendMail($to, $subject, $body)
     {
         $mail = new PHPMailer(true);

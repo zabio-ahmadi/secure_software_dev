@@ -407,6 +407,11 @@ body {
 .twit .twit-footer .share_like i {
   cursor: pointer;
 }
+
+.twit .twit-footer .share_like button {
+  border: none;
+  background: none;
+}
 .twit .twit-footer .share_like i:nth-child(1):hover{
   background-color: #146ebe38;
   color: var(--main-color-ligther);
@@ -755,6 +760,13 @@ body {
 
 .admin-page tbody tr img {
   width: 50px;
+  height: 50px;
   border-radius: 100%;
+}
+
+.admin-page tbody tr p {
+  line-height: 15px;
+  font-weight: 500;
+  max-width: 200px;
 }
 /* admin */

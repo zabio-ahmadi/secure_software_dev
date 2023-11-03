@@ -61,8 +61,8 @@ $users = $obj->executeQuery($query);
 
 
 <?php
-$query = "SELECT * FROM posts
-LEFT JOIN users on users.id = posts.user_id;
+$query = "SELECT posts.id as post_id, title, body, image_url, posted_at, user_id, user_name, email, profile_image FROM posts
+LEFT JOIN users on users.id = posts.user_id order by posted_at DESC;
 ";
 $posts = $obj->executeQuery($query);
 
@@ -100,28 +100,27 @@ while ($row = mysqli_fetch_array($posts)) {
         </div>
         <div class="twit-footer">
           <div class="twit-date">
-            <p>12:09 PM 10 Nov 2023</p>
+            <p>' . $row['posted_at'] . '</p>
           </div>
 
           <div class="share_like">
             <i class="fa-regular fa-comment"></i>
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
             <i class="fa-regular fa-heart"></i>
-            <i class="fa-regular fa-bookmark"></i>
+            <form action="report_message.php" method="POST">
+              <input type="text" name="reported_message_id" value="' . $row['post_id'] . '" style="display:none;">
+              <button type="submit"><i class="fa-solid fa-bug"></i></button>
+            </form>
           </div>
         </div>
       </div>
-      
     </div>
-  
   ';
 }
 
-
 ?>
+
 
 <?php
 include_once 'footer.php';
 ?>
-
-
