@@ -51,10 +51,6 @@ $query = "SELECT * FROM users WHERE user_token = '$userToken'";
 $result = $obj->executeQuery($query);
 $data = mysqli_fetch_assoc($result);
 
-if (empty($data)) {
-    sendBadRequest();
-    die();
-}
 if (count($requestPath) > 2) {
     sendBadRequest();
 } else if (1 == 2) {
